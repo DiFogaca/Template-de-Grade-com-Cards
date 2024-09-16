@@ -1,0 +1,35 @@
+.button-container {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 5px 15px;
+    margin: 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.detalhes {
+    background-color: green;
+    color: white;
+}
+
+.logs {
+    background-color: rgb(175, 90, 0);
+    color: white;
+}
+
+
