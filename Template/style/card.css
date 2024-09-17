@@ -1,8 +1,9 @@
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   background-color: #ffffff;
 }
@@ -14,6 +15,7 @@ body {
   padding: 20px;
   width: 80%;
   box-sizing: border-box;
+  flex:1;
 }
 
 .card {
