@@ -1,11 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
 /* Estilos para o tema claro */
 body {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.832);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     color: rgb(4, 1, 80);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
 }
 
 .card {
-    background-color: #f9f9f9;
+    background-color: #b9c2c6d0;
     color: rgb(4, 1, 80);
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -17,12 +34,23 @@ body .card:hover {
 
 /* Estilos para o tema escuro */
 body.dark-theme {
-    background-color: rgb(4, 1, 80);
+    background: rgba(0, 33, 79, 0.862);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
 }
 
 body.dark-theme .card {
-    background-color: rgb(4, 1, 100);
+    background-color: rgba(8, 59, 135, 0.677);
     color: white;
 }
 

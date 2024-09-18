@@ -8,8 +8,8 @@ for (let i = 1; i <= numberOfCards; i++) {
         <h3 class="titulo">Título ${i}</h3>
         <p>Conteúdo do card ${i}.</p>
         <div class="button-container">
-            <button class="logs">Logs</button>
-            <button class="detalhes">Detalhes</button>
+            <button type="button" class="logs">Logs</button>
+            <button type="button" class="detalhes">Detalhes</button>
         </div>
     `;
     cardContainer.appendChild(card);
