@@ -19,7 +19,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin: 0;
-    min-height: 90vh; 
+    min-height: 95vh; 
 }
 
 .card {
@@ -48,7 +48,7 @@ body.dark-theme {
     justify-content: space-between;
     align-items: center;
     margin: 0;
-    min-height: 90vh;
+    min-height: 95vh;
 }
 
 body.dark-theme .card {
@@ -225,12 +225,21 @@ footer {
     background-color: #d32f2f;
 }
 
-.button-container .confirm {
+.button-container .confirm-add{
     background-color: #4CAF50;
     color: white;
 }
 
-.button-container .confirm:hover {
+.button-container .confirm-add:hover{
+    background-color: #388E3C;
+}
+
+.button-container .confirm-edit{
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button-container .confirm-edit:hover{
     background-color: #388E3C;
 }
 
@@ -250,3 +259,18 @@ footer {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+.button-container .edit {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-container .edit:hover {
+    background-color: #1976D2;
+}
+

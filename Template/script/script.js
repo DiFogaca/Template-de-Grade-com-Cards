@@ -4,6 +4,10 @@ const sunIcon = document.querySelector('.material-symbols-outlined.day');
 const moonIcon = document.querySelector('.material-symbols-outlined.night');
 const newCompanyModal = document.getElementById('newCompanyModal');
 const newCompanyForm = document.getElementById('newCompanyForm');
+const editButton = document.querySelector('.edit');
+const confirmAddButton = document.querySelector('.confirm-add');
+const confirmEditButton = document.querySelector('.confirm-edit');
+const cancelButton = document.querySelector('.cancel');
 
 // Função para definir o cookie
 function setCookie(name, value, days) {
@@ -64,7 +68,7 @@ function loadEmpresas() {
             <p>Quantidade de carros: ${empresa.carros}</p>
             <div class="button-container">
                 <button type="button" class="logs">Logs</button>
-                <button type="button" class="detalhes">Detalhes</button>
+                <button type="button" class="detalhes" data-index="${index}">Detalhes</button>
             </div>
         `;
         cardContainer.appendChild(card);
@@ -74,7 +78,122 @@ function loadEmpresas() {
     document.querySelectorAll('.logs').forEach(button => {
         button.addEventListener('click', () => openModal(document.getElementById('logModal')));
     });
+
+    // Adiciona evento de clique aos botões de detalhes
+    document.querySelectorAll('.detalhes').forEach(button => {
+        button.addEventListener('click', event => {
+            const index = event.target.getAttribute('data-index');
+            const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
+            const empresa = empresas[index];
+            document.getElementById('companyName').value = empresa.nome;
+            document.getElementById('carCount').value = empresa.carros;
+            document.getElementById('companyName').disabled = true;
+            document.getElementById('carCount').disabled = true;
+            confirmAddButton.style.display = 'none';
+            confirmEditButton.style.display = 'none';
+            editButton.style.display = 'block'; // Mostra o botão "Editar"
+            if (!newCompanyForm.contains(editButton)) {
+                newCompanyForm.appendChild(editButton);
+            }
+            newCompanyForm.setAttribute('data-index', index);
+            openModal(newCompanyModal);
+        });
+    });
 }
+
+// Adiciona evento de submissão ao botão "Confirmar Adição"
+confirmAddButton.addEventListener('click', event => {
+    event.preventDefault();
+    if (newCompanyForm.checkValidity()) {
+        const companyName = document.getElementById('companyName').value;
+        const carCount = document.getElementById('carCount').value;
+        const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
+        
+        // Adiciona nova empresa
+        empresas.push({ nome: companyName, carros: carCount });
+
+        localStorage.setItem('empresas', JSON.stringify(empresas));
+        closeModal(newCompanyModal);
+        loadEmpresas();
+        console.log('Nova empresa adicionada');
+    } else {
+        newCompanyForm.reportValidity();
+    }
+});
+
+
+// Adiciona evento de submissão ao botão "Confirmar Edição"
+confirmEditButton.addEventListener('click', event => {
+    event.preventDefault();
+    const companyName = document.getElementById('companyName').value;
+    const carCount = document.getElementById('carCount').value;
+    const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
+    const index = newCompanyForm.getAttribute('data-index');
+
+    if (index !== null) {
+        // Edita empresa existente
+        empresas[index] = { nome: companyName, carros: carCount };
+    }
+
+    localStorage.setItem('empresas', JSON.stringify(empresas));
+    closeModal(newCompanyModal);
+    loadEmpresas();
+    console.log('Empresa editada');
+});
+
+// Adiciona evento de clique ao botão "Editar"
+editButton.addEventListener('click', () => {
+    document.getElementById('companyName').disabled = false;
+    document.getElementById('carCount').disabled = false;
+    confirmAddButton.style.display = 'none';
+    confirmEditButton.style.display = 'block';
+    editButton.style.display = 'none';
+});
+
+// Adiciona evento de clique ao botão "Novo"
+document.querySelector('.novo').addEventListener('click', () => {
+    // Limpa os campos do formulário
+    document.getElementById('companyName').value = '';
+    document.getElementById('carCount').value = '';
+    document.getElementById('companyName').disabled = false;
+    document.getElementById('carCount').disabled = false;
+    confirmAddButton.style.display = 'block';
+    confirmEditButton.style.display = 'none';
+    editButton.style.display = 'none'; // Esconde o botão "Editar"
+    openModal(newCompanyModal);
+});
+
+// Inicializa o script quando a página carrega
+window.onload = () => {
+    initializeTheme();
+    loadEmpresas();
+
+    // Adiciona evento de clique ao botão de alternância de tema
+    themeToggle.addEventListener('click', toggleTheme);
+
+    // Fecha o modal quando o usuário clica no "x" ou no botão cancelar
+    document.querySelectorAll('.close, .cancel').forEach(button => {
+        button.addEventListener('click', () => closeModal(newCompanyModal));
+    });
+
+    // Fecha o modal quando o usuário clica fora do modal
+    window.addEventListener('click', event => {
+        if (event.target === newCompanyModal) {
+            closeModal(newCompanyModal);
+        }
+    });
+
+    // Fecha o modal de logs quando o usuário clica no "x"
+    document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
+
+    // Fecha o modal de logs quando o usuário clica fora do modal
+    window.addEventListener('click', event => {
+        const modal = document.getElementById('logModal');
+        if (event.target === modal) {
+            closeModal(modal);
+        }
+    });
+};
 
 // Função para inicializar o tema
 function initializeTheme() {
@@ -89,55 +208,3 @@ function initializeTheme() {
         moonIcon.style.display = 'none';
     }
 }
-
-// Inicializa o script quando a página carrega
-window.onload = () => {
-    initializeTheme();
-    loadEmpresas();
-
-    // Adiciona evento de clique ao botão de alternância de tema
-    themeToggle.addEventListener('click', toggleTheme);
-
-    // Adiciona evento de clique ao botão "Novo"
-    document.querySelector('.novo').addEventListener('click', () => {
-        // Limpa os campos do formulário
-        document.getElementById('companyName').value = '';
-        document.getElementById('carCount').value = '';
-        openModal(newCompanyModal);
-    });
-
-    // Fecha o modal quando o usuário clica no "x" ou no botão cancelar
-    document.querySelectorAll('.close, .cancel').forEach(button => {
-        button.addEventListener('click', () => closeModal(newCompanyModal));
-    });
-
-    // Fecha o modal quando o usuário clica fora do modal
-    window.addEventListener('click', event => {
-        if (event.target === newCompanyModal) {
-            closeModal(newCompanyModal);
-        }
-    });
-
-    // Adiciona evento de submissão ao formulário de nova empresa
-    newCompanyForm.addEventListener('submit', event => {
-        event.preventDefault();
-        const companyName = document.getElementById('companyName').value;
-        const carCount = document.getElementById('carCount').value;
-        const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
-        empresas.push({ nome: companyName, carros: carCount });
-        localStorage.setItem('empresas', JSON.stringify(empresas));
-        closeModal(newCompanyModal);
-        loadEmpresas();
-    });
-
-    // Fecha o modal quando o usuário clica no "x"
-    document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
-
-    // Fecha o modal quando o usuário clica fora do modal
-    window.addEventListener('click', event => {
-        const modal = document.getElementById('logModal');
-        if (event.target === modal) {
-            closeModal(modal);
-        }
-    });
-};
