@@ -11,20 +11,46 @@
 </head>
 <body>
     <header>
+        <button type="button" class="novo">Novo</button>
         <h1>Meu Cabeçalho</h1>
         <div id="themeToggle" class="theme-toggle">
             <span class="material-symbols-outlined day">light_mode</span>
             <span class="material-symbols-outlined night">dark_mode</span>
-            </div>
         </div>
     </header>
 
     <div class="container" id="cardContainer"></div>
-    <script src="../Template/script/script.js"></script>
+
+    <div id="logModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Logs do Usuário</h2>
+            <div id="logContent"></div>
+        </div>
+    </div>
+
+    <div id="newCompanyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Cadastrar Nova Empresa</h2>
+            <form id="newCompanyForm">
+                <label for="companyName">Nome da Empresa:</label>
+                <input type="text" id="companyName" name="companyName" required>
+                <label for="carCount">Quantidade de Carros:</label>
+                <input type="number" id="carCount" name="carCount" required>
+                <br>
+                <div class="button-container">
+                    <button type="button" class="cancel">Cancelar</button>
+                    <button type="submit" class="confirm">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <p>v.1.0</p>
     </footer>
-    
+
+    <script src="../Template/script/script.js"></script>
 </body>
 </html>
