@@ -57,6 +57,13 @@ function closeModal(modal) {
     modal.style.display = 'none';
 }
 
+function toggleDarkTheme() {
+    const modalContent = document.querySelector('.modal-content');
+    modalContent.classList.toggle('dark-theme');
+}
+
+toggleDarkTheme();
+
 // Função para carregar os dados das empresas e criar os cards
 function loadEmpresas() {
     cardContainer.innerHTML = ''; // Limpa o contêiner de cards antes de adicionar novos
