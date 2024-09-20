@@ -8,6 +8,7 @@ const editButton = document.querySelector('.edit');
 const confirmAddButton = document.querySelector('.confirm-add');
 const confirmEditButton = document.querySelector('.confirm-edit');
 const cancelButton = document.querySelector('.cancel');
+const modalTitle = document.querySelector('#newCompanyModal .modal-content h2');
 
 // Função para definir o cookie
 function setCookie(name, value, days) {
@@ -96,9 +97,19 @@ function loadEmpresas() {
                 newCompanyForm.appendChild(editButton);
             }
             newCompanyForm.setAttribute('data-index', index);
+            updateModalTitle(true);
             openModal(newCompanyModal);
         });
     });
+}
+
+// Função para atualizar o título do modal
+function updateModalTitle(isEditing) {
+    if (isEditing) {
+        modalTitle.textContent = 'Editar Empresa';
+    } else {
+        modalTitle.textContent = 'Cadastrar Nova Empresa';
+    }
 }
 
 // Adiciona evento de submissão ao botão "Confirmar Adição"
@@ -160,6 +171,7 @@ document.querySelector('.novo').addEventListener('click', () => {
     confirmAddButton.style.display = 'block';
     confirmEditButton.style.display = 'none';
     editButton.style.display = 'none'; // Esconde o botão "Editar"
+    updateModalTitle(false);
     openModal(newCompanyModal);
 });
 
