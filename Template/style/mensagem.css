@@ -1,0 +1,18 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+#mensagem {
+    background-color: #4caf50; /* Cor de fundo verde */
+    color: white; /* Cor do texto branco */
+    padding: 10px; /* Espaçamento interno */
+    margin-top: 10px; /* Espaçamento superior */
+    border-radius: 5px; /* Bordas arredondadas */
+    text-align: center; /* Centralizar texto */
+    display: none; /* Inicialmente escondido */
+}
