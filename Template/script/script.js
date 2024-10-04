@@ -120,45 +120,6 @@ function updateModalTitle(isEditing) {
     }
 }
 
-// Adiciona evento de submissão ao botão "Confirmar Adição"
-confirmAddButton.addEventListener('click', event => {
-    event.preventDefault();
-    if (newCompanyForm.checkValidity()) {
-        const companyName = document.getElementById('companyName').value;
-        const carCount = document.getElementById('carCount').value;
-        const empresas = JSON.parse(localStorage.getItem('empresas')) || [];
-        
-        // Adiciona nova empresa
-        empresas.push({ nome: companyName, carros: carCount });
-
-        localStorage.setItem('empresas', JSON.stringify(empresas));
-        closeModal(newCompanyModal);
-        loadEmpresas();
-        // Exibe a mensagem na tela com efeito de fade-in
-        const mensagemDiv = document.getElementById('mensagem');
-        mensagemDiv.textContent = 'Nova empresa adicionada';
-        mensagemDiv.style.display = 'block';
-        mensagemDiv.style.opacity = 0;
-        setTimeout(() => {
-            mensagemDiv.style.transition = 'opacity 0.5s';
-            mensagemDiv.style.opacity = 1;
-        }, 10);
-
-        // Remove a mensagem após 5 segundos
-        setTimeout(() => {
-            mensagemDiv.style.transition = 'opacity 0.5s';
-            mensagemDiv.style.opacity = 0;
-            setTimeout(() => {
-                mensagemDiv.style.display = 'none';
-            }, 500);
-        }, 5000);
-        console.log('Nova empresa adicionada');
-    } else {
-        newCompanyForm.reportValidity();
-    }
-});
-
-
 // Adiciona evento de submissão ao botão "Confirmar Edição"
 confirmEditButton.addEventListener('click', event => {
     event.preventDefault();
@@ -214,23 +175,8 @@ window.onload = () => {
         button.addEventListener('click', () => closeModal(newCompanyModal));
     });
 
-    // Fecha o modal quando o usuário clica fora do modal
-    window.addEventListener('click', event => {
-        if (event.target === newCompanyModal) {
-            closeModal(newCompanyModal);
-        }
-    });
-
     // Fecha o modal de logs quando o usuário clica no "x"
     document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
-
-    // Fecha o modal de logs quando o usuário clica fora do modal
-    window.addEventListener('click', event => {
-        const modal = document.getElementById('logModal');
-        if (event.target === modal) {
-            closeModal(modal);
-        }
-    });
 };
 
 // Função para inicializar o tema

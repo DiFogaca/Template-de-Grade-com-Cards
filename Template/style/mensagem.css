@@ -7,12 +7,31 @@
 body {
     font-family: 'Roboto', sans-serif;
 }
-#mensagem {
-    background-color: #4caf50; /* Cor de fundo verde */
-    color: white; /* Cor do texto branco */
-    padding: 10px; /* Espaçamento interno */
-    margin-top: 10px; /* Espaçamento superior */
-    border-radius: 5px; /* Bordas arredondadas */
-    text-align: center; /* Centralizar texto */
-    display: none; /* Inicialmente escondido */
+
+#mensagemEdit {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#mensagemAdd {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
