@@ -5,27 +5,55 @@
 }
 
 /* Estilos para o tema claro */
-body {
+html, body {
     background-color: rgba(255, 255, 255, 0.832);
-    border-radius: 10px;
+    border-radius: 2px;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 2px;
     color: rgb(4, 1, 80);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    margin: 0;
-    min-height: 95vh; 
+    margin: auto;
+    height: 99%;
+    width: 99%;
+    overflow: hidden; 
+}
+
+.container {
+    margin: 20px;
+    overflow: auto;
+    width: 100%; /* Garante que ocupe toda a largura */
+}
+
+/* Estiliza a barra de rolagem */
+.container::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+}
+
+.container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Cor do fundo da barra de rolagem */
+    border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Cor da barra de rolagem */
+    border-radius: 10px;
+    border: 3px solid #f1f1f1; /* Espaço ao redor da barra de rolagem */
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Cor da barra de rolagem ao passar o mouse */
 }
 
 .card {
     background-color: #b9c2c6d0;
     color: rgb(4, 1, 80);
     transition: transform 0.2s, box-shadow 0.2s;
+    width: auto;
+    padding: auto;
 }
 
 body .card:hover {
@@ -34,21 +62,21 @@ body .card:hover {
 }
 
 /* Estilos para o tema escuro */
-body.dark-theme {
+html, body.dark-theme {
     background: rgba(0, 33, 79, 0.862);
-    border-radius: 10px;
+    border-radius: 2px;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 2px;
     color: white;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     margin: 0;
-    min-height: 95vh;
+    height: 99%;
+    width: 99%;
+    overflow: hidden; 
 }
 
 body.dark-theme .card {
