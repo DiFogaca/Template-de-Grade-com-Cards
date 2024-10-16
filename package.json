@@ -2,7 +2,8 @@
   "dependencies": {
     "body-parser": "^1.20.3",
     "express": "^4.21.0",
-    "odbc": "^2.4.9"
+    "odbc": "^2.4.9",
+    "template-de-grade-com-cards": "file:"
   },
   "name": "template-de-grade-com-cards",
   "version": "1.0.0",

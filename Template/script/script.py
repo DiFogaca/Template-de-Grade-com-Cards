@@ -1,7 +1,7 @@
 import pygame
 import threading
 import time
-from pynput.keyboard import Key, Controller as KeyboardController
+import ctypes
 
 # Inicializa o Pygame
 pygame.init()
@@ -19,30 +19,31 @@ size = (300, 400)
 screen = pygame.display.set_mode(size, pygame.SRCALPHA)
 pygame.display.set_caption("Semáforo")
 
-# Inicializa o controlador de teclado
-keyboard = KeyboardController()
 is_active = True
 done = False
 previous_state = is_active
+
+# Constantes para evitar que o sistema entre em modo de suspensão
+ES_CONTINUOUS = 0x80000000
+ES_SYSTEM_REQUIRED = 0x00000001
+ES_DISPLAY_REQUIRED = 0x00000002
 
 # Função para alternar o estado ativo/inativo
 def toggle():
     global is_active
     is_active = not is_active
 
-# Função que gerencia a lógica de pressionar a tecla e alternar estados
-def key_press_loop():
+# Função que gerencia a lógica de alternar estados e evitar suspensão
+def state_management_loop():
     global done, is_active, previous_state
-    press_time = time.time()
     
     while not done:
         if is_active:
-            # Pressiona Shift a cada 30 segundos
-            if time.time() - press_time >= 30:
-                print("Pressionando Shift")
-                keyboard.press(Key.shift)
-                keyboard.release(Key.shift)
-                press_time = time.time()
+            # Evita que o sistema entre em modo de suspensão
+            ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED)
+        else:
+            # Permite que o sistema entre em modo de suspensão
+            ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
         time.sleep(0.1)  # Pequena pausa para evitar uso excessivo de CPU
 
 # Função principal que gerencia o loop do Pygame
@@ -88,10 +89,10 @@ def main_loop():
         pygame.display.flip()
         clock.tick(60)
 
-# Iniciar a função de pressionar a tecla em uma thread separada
-key_press_thread = threading.Thread(target=key_press_loop)
-key_press_thread.daemon = True
-key_press_thread.start()
+# Iniciar a função de gerenciamento de estado em uma thread separada
+state_management_thread = threading.Thread(target=state_management_loop)
+state_management_thread.daemon = True
+state_management_thread.start()
 
 # Iniciar o loop principal do Pygame
 main_loop()
