@@ -1,7 +1,7 @@
-import pygame # type: ignore
+import pygame
 import threading
 import time
-from pynput.keyboard import Key, Controller as KeyboardController # type: ignore
+from pynput.keyboard import Key, Controller as KeyboardController
 
 # Inicializa o Pygame
 pygame.init()
