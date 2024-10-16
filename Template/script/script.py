@@ -1,7 +1,7 @@
-import pygame
+import pygame # type: ignore
 import threading
 import time
-from pynput.keyboard import Key, Controller as KeyboardController
+from pynput.keyboard import Key, Controller as KeyboardController # type: ignore
 
 # Inicializa o Pygame
 pygame.init()
@@ -9,15 +9,14 @@ pygame.init()
 # Define as cores com transparência
 BLACK = (0, 0, 0, 255)
 RED = (255, 0, 0, 128)  # 50% transparente
-DARK_RED = (128, 0, 0, 128)  # Vermelho escuro para luz apagada
+DARK_RED = (64, 0, 0, 128)  # Vermelho escuro para luz apagada
 GREEN = (0, 255, 0, 128)  # 50% transparente
-DARK_GREEN = (0, 128, 0, 128)  # Verde escuro para luz apagada
+DARK_GREEN = (0, 64, 0, 128)  # Verde escuro para luz apagada
 WHITE = (255, 255, 255, 255)
 
 # Define o tamanho da janela
 size = (300, 400)
 screen = pygame.display.set_mode(size, pygame.SRCALPHA)
-
 pygame.display.set_caption("Semáforo")
 
 keyboard = KeyboardController()
@@ -25,6 +24,7 @@ is_active = True
 done = False
 
 def press_key():
+    global done
     while not done:
         if is_active:
             print("Pressionando Shift")
@@ -81,6 +81,7 @@ while not done:
     pygame.display.flip()
     clock.tick(60)
 
-pygame.quit()
+# Finaliza o Pygame e a thread
 done = True  # Finaliza a thread
 thread.join()  # Aguarda a finalização da thread
+pygame.quit()
