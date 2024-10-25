@@ -31,8 +31,14 @@ function showConfirmationMessage(element, message) {
 // Carregar dados do backend e criar cards
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('/get-data');
+    const response = await fetch('/get-data', {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
+    console.log('Dados recebidos:', data);
     const container = document.getElementById('cardContainer');
     data.forEach(item => {
       const card = document.createElement('div');
