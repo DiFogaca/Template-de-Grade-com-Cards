@@ -1,23 +1,8 @@
-const cardContainer = document.getElementById('cardContainer');
-const newCompanyModal = document.getElementById('newCompanyModal');
-const newCompanyForm = document.getElementById('newCompanyForm');
-const editButton = document.querySelector('.edit');
-const confirmAddButton = document.querySelector('.confirm-add');
-const confirmEditButton = document.querySelector('.confirm-edit');
-const cancelButton = document.querySelector('.cancel');
-const modalTitle = document.querySelector('#newCompanyModal .modal-content h2');
-const mensagemAdd = document.getElementById('mensagemAdd');
-const mensagemEdit = document.getElementById('mensagemEdit');
+// script.js
 
-// Função para abrir o modal
-function openModal(modal) {
-  modal.style.display = 'block';
-}
-
-// Função para fechar o modal
-function closeModal(modal) {
-  modal.style.display = 'none';
-}
+import { fetchData, saveData, updateData } from './api.js';
+import { openModal, closeModal, updateModalTitle, setupDetailButton } from './modal.js';
+import { renderCards } from './cardActions.js';
 
 // Função para mostrar mensagens de confirmação
 function showConfirmationMessage(element, message) {
@@ -28,122 +13,19 @@ function showConfirmationMessage(element, message) {
   }, 3000);
 }
 
-// Carregar dados do backend e criar cards
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const response = await fetch('http://192.168.0.16:3000/get-data', {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    console.log('Dados recebidos:', data);
-    const container = document.getElementById('cardContainer');
-    container.innerHTML = '';  // Limpar o container antes de adicionar novos cards
-    data.forEach(item => {
-      console.log('Item:', item); // Adicionando log para verificar cada item recebido
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h3>${item.companyName}</h3>
-        <p>Quantidade de Carros: ${item.carCount}</p>
-        <p>Eventos: ${item.Eventos}</p>
-        <p>Ativo: ${item.Ativo ? 'Sim' : 'Não'}</p>
-        <div class="button-container">
-          <button type="button" class="logs">Logs</button>
-          <button type="button" class="detalhes" data-id="${item.Codigo}">Detalhes</button>
-        </div>`;
-      container.appendChild(card);
-    });
-
-    // Adicionar eventos aos botões
-    document.querySelectorAll('.logs').forEach(button => {
-      button.addEventListener('click', () => openModal(document.getElementById('logModal')));
-    });
-    document.querySelectorAll('.detalhes').forEach(button => {
-      button.addEventListener('click', (event) => {
-        const id = event.target.getAttribute('data-id');
-        const empresa = data.find(item => item.Codigo == id);
-        if (empresa) {
-          document.getElementById('companyName').value = empresa.companyName;
-          document.getElementById('carCount').value = empresa.carCount;
-          confirmEditButton.setAttribute('data-id', id);
-          updateModalTitle(true);
-          openModal(newCompanyModal);
-        }
-      });
-    });
-  } catch (error) {
-    console.error('Erro ao carregar dados:', error);
-  }
-});
-
-// Função para atualizar o título do modal
-function updateModalTitle(isEditing) {
-  if (isEditing) {
-    modalTitle.textContent = 'Editar Empresa';
-  } else {
-    modalTitle.textContent = 'Cadastrar Nova Empresa';
-  }
-}
-
-// Adiciona evento de submissão ao botão "Confirmar Adição"
-confirmAddButton.addEventListener('click', async event => {
-  event.preventDefault();
-  const companyName = document.getElementById('companyName').value;
-  const carCount = document.getElementById('carCount').value;
-  // Enviar dados ao backend para salvar
-  try {
-    const response = await fetch('http://192.168.0.16:3000/save-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ companyName, carCount })
-    });
-    const result = await response.text();
-    console.log(result); // Exibe a resposta do servidor
-    closeModal(newCompanyModal);
-    showConfirmationMessage(mensagemAdd, 'Dados salvos com sucesso.');
-    document.dispatchEvent(new Event('DOMContentLoaded')); // Recarrega os dados do backend
-  } catch (error) {
-    console.error('Erro ao salvar dados:', error);
-  }
-});
-
-// Adiciona evento de submissão ao botão "Confirmar Edição"
-confirmEditButton.addEventListener('click', async event => {
-  event.preventDefault();
-  const companyName = document.getElementById('companyName').value;
-  const carCount = document.getElementById('carCount').value;
-  const id = confirmEditButton.getAttribute('data-id'); // Certifique-se de que o ID está sendo capturado
-  // Enviar dados editados ao backend para atualização
-  try {
-    const response = await fetch(`http://192.168.0.16:3000/update-data/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ companyName, carCount })
-    });
-    const result = await response.text();
-    console.log(result);
-    closeModal(newCompanyModal);
-    showConfirmationMessage(mensagemEdit, 'Dados editados com sucesso.');
-    document.dispatchEvent(new Event('DOMContentLoaded')); // Recarrega os dados do backend
-  } catch (error) {
-    console.error('Erro ao atualizar dados:', error);
-  }
-});
-
-// Adiciona evento de clique ao botão "Editar"
-editButton.addEventListener('click', () => {
-  document.getElementById('companyName').disabled = false;
-  document.getElementById('carCount').disabled = false;
-  confirmAddButton.style.display = 'none';
-  confirmEditButton.style.display = 'block';
-  editButton.style.display = 'none';
+  const cardContainer = document.getElementById('cardContainer');
+  const data = await fetchData('http://192.168.0.16:3000/get-data');
+  renderCards(cardContainer, data);
+  
+  // Configura o botão "Detalhes"
+  setupDetailButton(data);
+  
+  // Seleciona o modal de empresa e os botões de fechar
+  const newCompanyModal = document.getElementById('newCompanyModal');
+  document.querySelectorAll('.close, .cancel').forEach(button => {
+      button.addEventListener('click', () => closeModal(newCompanyModal));
+  });
 });
 
 // Adiciona evento de clique ao botão "Novo"
@@ -152,17 +34,36 @@ document.querySelector('.novo').addEventListener('click', () => {
   document.getElementById('carCount').value = '';
   document.getElementById('companyName').disabled = false;
   document.getElementById('carCount').disabled = false;
-  confirmAddButton.style.display = 'block';
-  confirmEditButton.style.display = 'none';
-  editButton.style.display = 'none';
   updateModalTitle(false);
-  openModal(newCompanyModal);
+  openModal(document.getElementById('newCompanyModal'));
 });
 
-// Inicializa o script quando a página carrega
-window.onload = () => {
-  document.querySelectorAll('.close, .cancel').forEach(button => {
-    button.addEventListener('click', () => closeModal(newCompanyModal));
-  });
-  document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
-};
+document.querySelector('.confirm-add').addEventListener('click', async (event) => {
+  event.preventDefault();
+  const companyName = document.getElementById('companyName').value;
+  const carCount = document.getElementById('carCount').value;
+  await saveData('http://192.168.0.16:3000/save-data', { companyName, carCount });
+  closeModal(document.getElementById('newCompanyModal'));
+  showConfirmationMessage(mensagemAdd, 'Nova empresa adicionada');
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+});
+
+document.querySelector('.confirm-edit').addEventListener('click', async (event) => {
+  event.preventDefault();
+  const companyName = document.getElementById('companyName').value;
+  const carCount = document.getElementById('carCount').value;
+  const codigo = document.querySelector('.confirm-edit').getAttribute('data-id');
+
+  console.log('Enviando para atualização:', { codigo, companyName, carCount });
+
+  try {
+    const result = await updateData(`http://192.168.0.16:3000/update-data/${codigo}`, { companyName, carCount });
+    console.log('Resultado da atualização:', result);
+    closeModal(document.getElementById('newCompanyModal'));
+    showConfirmationMessage(mensagemEdit, 'Cadastro editado com sucesso!');
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+  } catch (error) {
+    console.error('Erro ao atualizar dados:', error);
+  }
+});
+

@@ -87,6 +87,35 @@ app.get('/get-data', async (req, res) => {
   }
 });
 
+// Endpoint para atualizar dados
+app.put('/update-data/:Codigo', async (req, res) => {
+  const Codigo = req.params.Codigo;
+  const { companyName, carCount, eventos, ativo } = req.body;
+
+  console.log('Recebido para atualização:', { Codigo, companyName, carCount, eventos, ativo });
+
+  try {
+    const empresa = await Empresa.findByPk(Codigo);
+    if (empresa) {
+      empresa.companyName = companyName;
+      empresa.carCount = carCount;
+      empresa.Eventos = eventos;
+      empresa.Ativo = ativo;
+      await empresa.save();
+
+      console.log('Dados atualizados com sucesso!');
+      return res.status(200).send('Dados atualizados com sucesso!');
+    } else {
+      return res.status(404).send('Empresa não encontrada.');
+    }
+  } catch (err) {
+    console.error('Erro ao atualizar dados:', err.message);
+    return res.status(500).send('Erro ao atualizar dados: ' + err.message);
+  }
+});
+
+
+
 // Inicializa o servidor na porta 3000
 app.listen(3000, () => {
   const os = require('os');

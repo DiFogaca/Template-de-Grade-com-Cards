@@ -31,29 +31,31 @@
     <div id="newCompanyModal" class="modal">
         <div class="modal-content">
             <span class="close">×</span>
-            <h2>Cadastrar Nova Empresa</h2>
-            <form action="http://192.168.0.16:3000/save-data" method="POST" id="newCompanyForm">
+            <h2 id="modalTitle">Cadastrar Nova Empresa</h2>
+            <form id="newCompanyForm">
                 <label for="companyName">Nome da Empresa:</label>
                 <input type="text" id="companyName" name="companyName" required>
                 <label for="carCount">Quantidade de Carros:</label>
                 <input type="number" id="carCount" name="carCount" required>
                 <br><br>
                 <div class="button-container">
-                    <button type="button" class="cancel">Cancelar</button>
-                    <button type="submit" class="confirm-add">Confirmar</button>
-                    <button type="submit" class="confirm-edit" style="display: none;">Confirmar</button>
-                    <button type="button" class="edit" style="display: none;">Editar</button>
+                    <button id= "btnCancelar" type="button" class="cancel">Cancelar</button>
+                    <button id= "btnConfirmarAdd" type="submit" class="confirm-add">Confirmar</button>
+                    <button id= "btnConfirmarEditar" type="submit" class="confirm-edit" style="display: none;" data-id="1">Confirmar</button>
+                    <button id= "btnEditar" type="button" class="edit" style="display: none;">Editar</button>
                 </div>
             </form>
         </div>
     </div>
-    <span id="mensagemAdd"></span>
-    <span id="mensagemEdit"></span>
+    <div id="mensagemAdd" class="mensagem">Nova empresa adicionada</div>
+    <div id="mensagemEdit" class="mensagem">Cadastro editado com sucesso!</div>
     <footer>
         <p>v.1.0</p>
     </footer>
-    <script src="../public/Template/script/script.js"></script>
-    <script src="../public/Template/script/scriptMensagens.js"></script>
-    <script src="../public/Template/script/tema.js"></script>
+    <script src="../public/Template/script/tema.js" type="module"></script> <!-- Carregado primeiro -->
+    <script src="../public/Template/script/api.js" type="module"></script>
+    <script src="../public/Template/script/modal.js" type="module"></script>
+    <script src="../public/Template/script/cardActions.js" type="module"></script>
+    <script src="../public/Template/script/script.js" type="module"></script> <!-- Principal script -->
 </body>
 </html>
