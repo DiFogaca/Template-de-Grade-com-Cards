@@ -2,30 +2,33 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Sequelize } = require('sequelize');
 const app = express();
+const cors = require('cors'); // Adiciona esta linha
 
+app.use(cors()); // Adiciona esta linha
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Para analisar conteúdo JSON no corpo da requisição
 app.use(express.static('public')); // Para servir arquivos estáticos
 
-// Configuração da conexão com o banco de dados SQL Server
-const sequelize = new Sequelize('if0_37590322_cards', 'if0_37590322', '2EQWCc3akLw65F', {
-  host: 'sql301.infinityfree.com',
+// Configuração da conexão com o banco de dados MySQL
+const sequelize = new Sequelize('cards3d', 'Diego', '12354', {
+  host: '127.0.0.1',
   port: 3306,
   dialect: 'mysql',
   dialectModule: require('mysql2'),
+  logging: console.log
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('Conectado ao banco de dados SQL Server');
+    console.log('Conectado ao banco de dados MySQL Server');
   } catch (error) {
     console.error('Erro ao conectar ao banco de dados:', error);
   }
 })();
 
 // Definindo o modelo da tabela Cadastro_Empresas
-const Empresa = sequelize.define('Cadastro_Empresas', {
+const Empresa = sequelize.define('cadastro_empresas', {
   Codigo: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -79,7 +82,8 @@ app.get('/get-data', async (req, res) => {
     const data = await getData();
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar dados: ' + err.message });
+    console.error('Erro ao recuperar dados: ', err);
+    res.status(500).send('Erro ao recuperar dados');
   }
 });
 
@@ -100,3 +104,13 @@ app.listen(3000, () => {
 
   console.log(`Servidor iniciado na porta 3000: http://${address}:3000`);
 });
+
+
+// Configuração da conexão com o banco de dados MySQL
+// const sequelize = new Sequelize('if0_37590322_cards', 'if0_37590322', '2EQWCc3akLw65F', {
+//   host: 'sql301.infinityfree.com',
+//   port: 3306,
+//   dialect: 'mysql',
+//   dialectModule: require('mysql2'),
+//   logging: console.log
+// });

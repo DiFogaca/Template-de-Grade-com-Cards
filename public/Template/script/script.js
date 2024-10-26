@@ -11,27 +11,27 @@ const mensagemEdit = document.getElementById('mensagemEdit');
 
 // Função para abrir o modal
 function openModal(modal) {
-    modal.style.display = 'block';
+  modal.style.display = 'block';
 }
 
 // Função para fechar o modal
 function closeModal(modal) {
-    modal.style.display = 'none';
+  modal.style.display = 'none';
 }
 
 // Função para mostrar mensagens de confirmação
 function showConfirmationMessage(element, message) {
-    element.textContent = message;
-    element.style.display = 'block';
-    setTimeout(() => {
-        element.style.display = 'none';
-    }, 3000);
+  element.textContent = message;
+  element.style.display = 'block';
+  setTimeout(() => {
+    element.style.display = 'none';
+  }, 3000);
 }
 
 // Carregar dados do backend e criar cards
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('/get-data', {
+    const response = await fetch('http://192.168.0.16:3000/get-data', {
       headers: {
         'Accept': 'application/json'
       }
@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const data = await response.json();
     console.log('Dados recebidos:', data);
     const container = document.getElementById('cardContainer');
+    container.innerHTML = '';  // Limpar o container antes de adicionar novos cards
     data.forEach(item => {
+      console.log('Item:', item); // Adicionando log para verificar cada item recebido
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
@@ -59,7 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.logs').forEach(button => {
       button.addEventListener('click', () => openModal(document.getElementById('logModal')));
     });
-
     document.querySelectorAll('.detalhes').forEach(button => {
       button.addEventListener('click', (event) => {
         const id = event.target.getAttribute('data-id');
@@ -73,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     });
-
   } catch (error) {
     console.error('Erro ao carregar dados:', error);
   }
@@ -81,11 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Função para atualizar o título do modal
 function updateModalTitle(isEditing) {
-    if (isEditing) {
-        modalTitle.textContent = 'Editar Empresa';
-    } else {
-        modalTitle.textContent = 'Cadastrar Nova Empresa';
-    }
+  if (isEditing) {
+    modalTitle.textContent = 'Editar Empresa';
+  } else {
+    modalTitle.textContent = 'Cadastrar Nova Empresa';
+  }
 }
 
 // Adiciona evento de submissão ao botão "Confirmar Adição"
@@ -93,10 +93,9 @@ confirmAddButton.addEventListener('click', async event => {
   event.preventDefault();
   const companyName = document.getElementById('companyName').value;
   const carCount = document.getElementById('carCount').value;
-  
   // Enviar dados ao backend para salvar
   try {
-    const response = await fetch('/save-data', {
+    const response = await fetch('http://192.168.0.16:3000/save-data', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -119,10 +118,9 @@ confirmEditButton.addEventListener('click', async event => {
   const companyName = document.getElementById('companyName').value;
   const carCount = document.getElementById('carCount').value;
   const id = confirmEditButton.getAttribute('data-id'); // Certifique-se de que o ID está sendo capturado
-  
   // Enviar dados editados ao backend para atualização
   try {
-    const response = await fetch(`/update-data/${id}`, {
+    const response = await fetch(`http://192.168.0.16:3000/update-data/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -141,31 +139,30 @@ confirmEditButton.addEventListener('click', async event => {
 
 // Adiciona evento de clique ao botão "Editar"
 editButton.addEventListener('click', () => {
-    document.getElementById('companyName').disabled = false;
-    document.getElementById('carCount').disabled = false;
-    confirmAddButton.style.display = 'none';
-    confirmEditButton.style.display = 'block';
-    editButton.style.display = 'none';
+  document.getElementById('companyName').disabled = false;
+  document.getElementById('carCount').disabled = false;
+  confirmAddButton.style.display = 'none';
+  confirmEditButton.style.display = 'block';
+  editButton.style.display = 'none';
 });
 
 // Adiciona evento de clique ao botão "Novo"
 document.querySelector('.novo').addEventListener('click', () => {
-    document.getElementById('companyName').value = '';
-    document.getElementById('carCount').value = '';
-    document.getElementById('companyName').disabled = false;
-    document.getElementById('carCount').disabled = false;
-    confirmAddButton.style.display = 'block';
-    confirmEditButton.style.display = 'none';
-    editButton.style.display = 'none';
-    updateModalTitle(false);
-    openModal(newCompanyModal);
+  document.getElementById('companyName').value = '';
+  document.getElementById('carCount').value = '';
+  document.getElementById('companyName').disabled = false;
+  document.getElementById('carCount').disabled = false;
+  confirmAddButton.style.display = 'block';
+  confirmEditButton.style.display = 'none';
+  editButton.style.display = 'none';
+  updateModalTitle(false);
+  openModal(newCompanyModal);
 });
 
 // Inicializa o script quando a página carrega
 window.onload = () => {
-    document.querySelectorAll('.close, .cancel').forEach(button => {
-        button.addEventListener('click', () => closeModal(newCompanyModal));
-    });
-
-    document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
+  document.querySelectorAll('.close, .cancel').forEach(button => {
+    button.addEventListener('click', () => closeModal(newCompanyModal));
+  });
+  document.querySelector('.close').addEventListener('click', () => closeModal(document.getElementById('logModal')));
 };
