@@ -4,11 +4,8 @@
     border: 0;
   }
 
-body {
-    font-family: 'Roboto', sans-serif;
-}
-
 .mensagem {
+    font-family: 'Roboto', sans-serif;
     display: none;
     position: fixed;
     top: 50%;

@@ -15,7 +15,7 @@ function showConfirmationMessage(element, message) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cardContainer = document.getElementById('cardContainer');
-  const data = await fetchData('http://192.168.0.16:3000/get-data');
+  const data = await fetchData('http://192.168.0.9:3000/get-data');
   renderCards(cardContainer, data);
   
   // Configura o botão "Detalhes"
@@ -42,7 +42,7 @@ document.querySelector('.confirm-add').addEventListener('click', async (event) =
   event.preventDefault();
   const companyName = document.getElementById('companyName').value;
   const carCount = document.getElementById('carCount').value;
-  await saveData('http://192.168.0.16:3000/save-data', { companyName, carCount });
+  await saveData('http://192.168.0.9:3000/save-data', { companyName, carCount });
   closeModal(document.getElementById('newCompanyModal'));
   showConfirmationMessage(mensagemAdd, 'Nova empresa adicionada');
   document.dispatchEvent(new Event('DOMContentLoaded'));
@@ -57,7 +57,7 @@ document.querySelector('.confirm-edit').addEventListener('click', async (event) 
   console.log('Enviando para atualização:', { codigo, companyName, carCount });
 
   try {
-    const result = await updateData(`http://192.168.0.16:3000/update-data/${codigo}`, { companyName, carCount });
+    const result = await updateData(`http://192.168.0.9:3000/update-data/${codigo}`, { companyName, carCount });
     console.log('Resultado da atualização:', result);
     closeModal(document.getElementById('newCompanyModal'));
     showConfirmationMessage(mensagemEdit, 'Cadastro editado com sucesso!');
