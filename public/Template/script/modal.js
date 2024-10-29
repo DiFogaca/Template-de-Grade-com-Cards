@@ -64,21 +64,10 @@ function setupEditButton() {
     });
 }
 
-
-// Inicialização do modal
-    document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.close, .cancel').forEach(button => {
-        button.addEventListener('click', () => closeModal(newCompanyModal));
-    });
-
-    setupEditButton(); // Configura o evento do botão "Editar"
-});
-
 // Função para configurar o modal de logs
 export function setupLogModal() {
     const logModal = document.getElementById('logModal');
     const closeButton = logModal.querySelector('.close');
-
     closeButton.addEventListener('click', () => closeModal(logModal));
 }
 
@@ -88,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => closeModal(newCompanyModal));
     });
 
+    setupEditButton();
     setupLogModal(); // Configura o evento do botão "Logs"
 });
 

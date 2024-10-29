@@ -1,6 +1,6 @@
 // script.js
 
-import { fetchData, saveData, updateData } from './api.js';
+import { fetchData, saveData, updateData, fetchLogs } from './api.js';
 import { openModal, closeModal, updateModalTitle, setupDetailButton } from './modal.js';
 import { renderCards } from './cardActions.js';
 
@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.close, .cancel').forEach(button => {
       button.addEventListener('click', () => closeModal(newCompanyModal));
   });
+
+  // Adiciona evento de clique aos botões de log 
+  const logButtons = document.querySelectorAll('.logs'); 
+  logButtons.forEach(button => { 
+    button.addEventListener('click', async () => { 
+      const recordId = button.getAttribute('data-id'); 
+      const logs = await fetchLogs(recordId); 
+      displayLogs(logs); 
+    }); 
+  }); 
 });
 
 // Adiciona evento de clique ao botão "Novo"
@@ -67,3 +77,33 @@ document.querySelector('.confirm-edit').addEventListener('click', async (event) 
   }
 });
 
+// Função para exibir os logs no modal 
+function displayLogs(logs) { 
+  const logContent = document.getElementById('logContent'); 
+  logContent.innerHTML = ''; // Limpa o conteúdo anterior 
+  
+  logs.forEach(log => { 
+    const logEntry = document.createElement('div'); 
+    logEntry.innerHTML = `
+    <p>Ação: ${log.action}</p> 
+    <p>Tabela: ${log.table_name}</p>
+    <p>ID do Registro: ${log.record_id}</p> 
+    <p>Valor Antigo: ${log.old_value}</p> 
+    <p>Valor Novo: ${log.new_value}</p> 
+    <p>Alterado em: ${log.changed_at}</p> 
+    <p>Alterado por: ${log.changed_by}<hr><br>`;
+    logContent.appendChild(logEntry); 
+  }); 
+
+  const logModal = document.getElementById('logModal'); 
+  openModal(logModal);
+} 
+
+// Fecha o modal quando o usuário clica no botão de fechar 
+const closeModalButtons = document.querySelectorAll('.close'); 
+closeModalButtons.forEach(button => { 
+  button.addEventListener('click', () => { 
+    const modal = button.closest('.modal'); 
+    modal.style.display = 'none'; 
+  }); 
+});

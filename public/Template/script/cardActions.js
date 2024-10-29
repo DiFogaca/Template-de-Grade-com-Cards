@@ -1,6 +1,7 @@
 // cardActions.js
 
 import { openModal } from './modal.js';
+import { fetchLogs } from './api.js';
 
 // Função para criar um card na interface
 export function createCard(item) {
@@ -26,9 +27,13 @@ export function renderCards(container, data) {
     container.appendChild(card);
   });
 
-  // Adicionar eventos aos botões de cada card
-  document.querySelectorAll('.logs').forEach(button => {
-    button.addEventListener('click', () => openModal(document.getElementById('logModal')));
+  // Adicionar eventos aos botões de cada card 
+  document.querySelectorAll('.logs').forEach(button => { 
+    button.addEventListener('click', async () => { 
+      const recordId = button.getAttribute('data-id'); 
+      const logs = await fetchLogs(recordId); 
+      displayLogs(logs); 
+    }); 
   });
 
   document.querySelectorAll('.detalhes').forEach(button => {
@@ -43,3 +48,17 @@ export function renderCards(container, data) {
     });
   });
 }
+
+// Função para exibir os logs no modal 
+function displayLogs(logs) { 
+  const logContent = document.getElementById('logContent'); 
+  logContent.innerHTML = ''; // Limpa o conteúdo anterior 
+  
+  logs.forEach(log => { 
+    const logEntry = document.createElement('p'); 
+    logEntry.textContent = `${log.action} - ${log.changed_at} - ${log.changed_by}`; 
+    logContent.appendChild(logEntry); 
+  }); 
+    const logModal = document.getElementById('logModal'); 
+    openModal(logModal); 
+  }
