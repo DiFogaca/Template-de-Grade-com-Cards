@@ -1,0 +1,49 @@
+.matrix {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #0f0;
+    font-family: monospace;
+    font-size: 20px;
+    line-height: 20px;
+    opacity: 1;
+    z-index: 1;
+}
+
+@keyframes rain {
+    0% {
+        transform: translateY(-100%);
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateY(100%);
+        opacity: 0.1;
+    }
+}
+
+.drop {
+    position: absolute;
+    top: 0;
+    animation: rain 7s linear infinite;
+    animation-iteration-count: 1 infinite;
+}
+
+.bright {
+    color: #a8d1ff;
+    opacity: 1;
+}

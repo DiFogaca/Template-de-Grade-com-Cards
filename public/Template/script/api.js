@@ -1,4 +1,6 @@
 // api.js
+import { serverIP } from './config.js';
+
 
 // Carrega os dados da API para exibir os cards
 async function fetchData(url) {
@@ -45,7 +47,7 @@ async function updateData(url, data) {
 // Função para buscar os logs da API 
 async function fetchLogs(recordId) { 
   try { 
-    const response = await fetch(`http://192.168.0.9:3000/logs/${recordId}`, 
+    const response = await fetch(`http://${serverIP}/logs/${recordId}`, 
       { headers: { 'Accept': 'application/json' } 
     });
      
