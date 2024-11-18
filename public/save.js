@@ -55,36 +55,61 @@ const Empresa = sequelize.define('cadastro_empresas', {
   freezeTableName: true
 });
 
+
+// Definindo o modelo da tabela cadastro_pacientes
+const Paciente = sequelize.define('cadastro_pacientes', {
+  senha: {
+    type: Sequelize.STRING,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  nome: {
+    type: Sequelize.STRING,
+    defaultValue: Sequelize.NOW
+  },
+  hora_chegada: {
+    type: Sequelize.TIME
+  },
+  tempo_espera: {
+    type: Sequelize.TIME
+  },
+
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
+
 // Definindo o modelo da tabela Logs 
-const Log = sequelize.define('logs', { 
-  id: { 
-    type: Sequelize.INTEGER, 
-    autoIncrement: true, 
-    primaryKey: true 
-  }, 
-  action: { 
-    type: Sequelize.STRING 
-  }, 
-  table_name: { 
-    type: Sequelize.STRING 
-  }, 
-  record_id: { 
-    type: Sequelize.INTEGER 
-  }, 
-  old_value: { 
-    type: Sequelize.STRING 
-  }, new_value: { 
-    type: Sequelize.STRING 
-  }, 
-  changed_at: { 
-    type: Sequelize.DATE, defaultValue: Sequelize.NOW 
-  }, 
-  changed_by: { 
-    type: Sequelize.STRING 
-  } 
-}, { 
-  timestamps: false, 
-  freezeTableName: true 
+const Log = sequelize.define('logs', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  action: {
+    type: Sequelize.STRING
+  },
+  table_name: {
+    type: Sequelize.STRING
+  },
+  record_id: {
+    type: Sequelize.INTEGER
+  },
+  old_value: {
+    type: Sequelize.STRING
+  }, new_value: {
+    type: Sequelize.STRING
+  },
+  changed_at: {
+    type: Sequelize.DATE, defaultValue: Sequelize.NOW
+  },
+  changed_by: {
+    type: Sequelize.STRING
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
 });
 
 // Função para salvar dados
@@ -98,8 +123,8 @@ async function getData() {
 }
 
 // Função para buscar logs 
-async function getLogs(recordId) { 
-  return await Log.findAll({ where: { record_id: recordId } }); 
+async function getLogs(recordId) {
+  return await Log.findAll({ where: { record_id: recordId } });
 }
 
 // Endpoint para salvar dados
@@ -152,15 +177,15 @@ app.put('/update-data/:Codigo', async (req, res) => {
 });
 
 // Endpoint para buscar logs 
-app.get('/logs/:record_id', async (req, res) => { 
-  try { 
-    const recordId = req.params.record_id; 
-    const logs = await getLogs(recordId); 
-    res.json(logs); 
-  } catch (err) { 
-    console.error('Erro ao recuperar logs: ', err); 
-    res.status(500).send('Erro ao recuperar logs'); 
-  } 
+app.get('/logs/:record_id', async (req, res) => {
+  try {
+    const recordId = req.params.record_id;
+    const logs = await getLogs(recordId);
+    res.json(logs);
+  } catch (err) {
+    console.error('Erro ao recuperar logs: ', err);
+    res.status(500).send('Erro ao recuperar logs');
+  }
 });
 
 
