@@ -9,23 +9,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Para analisar conteúdo JSON no corpo da requisição
 app.use(express.static('public')); // Para servir arquivos estáticos
 
+// // Configuração da conexão com o banco de dados MySQL
+// const sequelize = new Sequelize('cards3d', 'Diego', '12354', {
+//   host: '127.0.0.1',
+//   port: 3306,
+//   dialect: 'mysql',
+//   dialectModule: require('mysql2'),
+//   logging: console.log
+// });
+
 // Configuração da conexão com o banco de dados MySQL
-const sequelize = new Sequelize('cards3d', 'Diego', '12354', {
-  host: '127.0.0.1',
+const sequelize = new Sequelize('freedb_DB_PROD', 'freedb_dlf123', 'qyqe2n$UFqfMjkc', {
+  host: 'sql.freedb.tech',
   port: 3306,
   dialect: 'mysql',
   dialectModule: require('mysql2'),
   logging: console.log
 });
 
-(async () => {
+async function testConnection() {
   try {
     await sequelize.authenticate();
-    console.log('Conectado ao banco de dados MySQL Server');
+    console.log('Conexão com o banco de dados foi estabelecida com sucesso!');
   } catch (error) {
-    console.error('Erro ao conectar ao banco de dados:', error);
+    console.error('Não foi possível conectar ao banco de dados:', error);
   }
-})();
+} testConnection();
+module.exports = sequelize;
 
 // Definindo o modelo da tabela Cadastro_Empresas
 const Empresa = sequelize.define('cadastro_empresas', {
@@ -56,31 +66,7 @@ const Empresa = sequelize.define('cadastro_empresas', {
 });
 
 
-// Definindo o modelo da tabela cadastro_pacientes
-const Paciente = sequelize.define('cadastro_pacientes', {
-  senha: {
-    type: Sequelize.STRING,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  nome: {
-    type: Sequelize.STRING,
-    defaultValue: Sequelize.NOW
-  },
-  hora_chegada: {
-    type: Sequelize.TIME
-  },
-  tempo_espera: {
-    type: Sequelize.TIME
-  },
-
-}, {
-  timestamps: false,
-  freezeTableName: true
-});
-
-
-// Definindo o modelo da tabela Logs 
+// Definindo o modelo da tabela Logs
 const Log = sequelize.define('logs', {
   id: {
     type: Sequelize.INTEGER,
@@ -112,6 +98,65 @@ const Log = sequelize.define('logs', {
   freezeTableName: true
 });
 
+// Adicionando hooks para logging 
+Empresa.addHook('beforeUpdate', async (empresa, options) => {
+  const originalEmpresa = await Empresa.findOne({
+    where: { Codigo: empresa.Codigo }
+  });
+  if (originalEmpresa) {
+    await Log.create({
+      action: 'UPDATE',
+      table_name: 'cadastro_empresas',
+      record_id: empresa.Codigo,
+      old_value: originalEmpresa.companyName,
+      new_value: empresa.companyName,
+      changed_by: 'Sistema'
+    });
+  }
+});
+Empresa.addHook('afterCreate', async (empresa, options) => {
+  await Log.create({
+    action: 'INSERT',
+    table_name: 'cadastro_empresas',
+    record_id: empresa.Codigo,
+    new_value: empresa.companyName,
+    changed_by: 'Sistema'
+  });
+});
+Empresa.addHook('afterDestroy', async (empresa, options) => {
+  await Log.create({
+    action: 'DELETE',
+    table_name: 'cadastro_empresas',
+    record_id: empresa.Codigo,
+    old_value: empresa.companyName,
+    changed_by: 'Sistema'
+  });
+});
+module.exports = { Empresa, Log };
+
+// Definindo o modelo da tabela cadastro_pacientes
+const Paciente = sequelize.define('cadastro_pacientes', {
+  senha: {
+    type: Sequelize.STRING,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  nome: {
+    type: Sequelize.STRING,
+    defaultValue: Sequelize.NOW
+  },
+  hora_chegada: {
+    type: Sequelize.TIME
+  },
+  tempo_espera: {
+    type: Sequelize.TIME
+  },
+
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
 // Função para salvar dados
 async function saveData(companyName, carCount, eventos, ativo) {
   await Empresa.create({ companyName, carCount, Eventos: eventos, Ativo: ativo });
@@ -122,7 +167,7 @@ async function getData() {
   return await Empresa.findAll();
 }
 
-// Função para buscar logs 
+// Função para buscar logs
 async function getLogs(recordId) {
   return await Log.findAll({ where: { record_id: recordId } });
 }
@@ -176,7 +221,7 @@ app.put('/update-data/:Codigo', async (req, res) => {
   }
 });
 
-// Endpoint para buscar logs 
+// Endpoint para buscar logs
 app.get('/logs/:record_id', async (req, res) => {
   try {
     const recordId = req.params.record_id;
@@ -209,11 +254,3 @@ app.listen(3000, () => {
 });
 
 
-// Configuração da conexão com o banco de dados MySQL
-// const sequelize = new Sequelize('if0_37590322_cards', 'if0_37590322', '2EQWCc3akLw65F', {
-//   host: 'sql301.infinityfree.com',
-//   port: 3306,
-//   dialect: 'mysql',
-//   dialectModule: require('mysql2'),
-//   logging: console.log
-// });
