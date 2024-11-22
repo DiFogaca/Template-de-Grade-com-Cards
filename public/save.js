@@ -7,8 +7,11 @@ const cors = require('cors'); // Adiciona esta linha
 app.use(cors()); // Adiciona esta linha
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Para analisar conteúdo JSON no corpo da requisição
-app.use(express.static('public')); // Para servir arquivos estáticos
+app.use(express.static(path.join(__dirname, 'public'))); // Para servir arquivos estáticos
 
+app.get('/', (req, res) => { 
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); 
+});
 
 //Configuração da conexão com o banco de dados MySQL PROD
 const sequelize = new Sequelize('freedb_DB_PROD', 'freedb_dlf123', 'qyqe2n$UFqfMjkc', {
@@ -28,14 +31,14 @@ const sequelize = new Sequelize('freedb_DB_PROD', 'freedb_dlf123', 'qyqe2n$UFqfM
 //   logging: console.log
 // });
 
-async function testConnection() { 
-  try { 
-    await sequelize.authenticate(); 
-    console.log('Conexão com o banco de dados foi estabelecida com sucesso!'); 
-  } catch (error) { 
-    console.error('Não foi possível conectar ao banco de dados:', error); 
-  } 
-} testConnection(); 
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Conexão com o banco de dados foi estabelecida com sucesso!');
+  } catch (error) {
+    console.error('Não foi possível conectar ao banco de dados:', error);
+  }
+} testConnection();
 module.exports = sequelize;
 
 // Definindo o modelo da tabela Cadastro_Empresas
