@@ -1,7 +1,7 @@
 // cardActions.js
 
 import { openModal } from './modal.js';
-import { fetchLogs } from './api.js';
+import { fetchLogs } from '../configs/api.js';
 
 // Função para criar um card na interface
 export function createCard(item) {

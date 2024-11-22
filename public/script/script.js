@@ -1,9 +1,9 @@
 // script.js
 
-import { fetchData, saveData, updateData, fetchLogs } from './api.js';
+import { fetchData, saveData, updateData, fetchLogs } from '../configs/api.js';
 import { openModal, closeModal, updateModalTitle, setupDetailButton } from './modal.js';
 import { renderCards } from './cardActions.js';
-import { serverIP } from './config.js';
+import { serverIP } from '../configs/config.js';
 
 // Função para mostrar mensagens de confirmação
 function showConfirmationMessage(element, message) {
