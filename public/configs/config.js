@@ -1,5 +1,5 @@
-
-let serverIP = '172.26.144.1' + ':3000';
+const PORT = process.env.PORT || 3000;
+let serverIP = '172.26.144.1' + ':' + PORT;
 export { serverIP };
 
 // async function getServerIP() {
