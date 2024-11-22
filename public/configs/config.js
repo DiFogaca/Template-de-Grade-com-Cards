@@ -1,5 +1,6 @@
 
 let serverIP = '172.26.144.1' + ':3000';
+export { serverIP };
 
 // async function getServerIP() {
 //   try {
@@ -12,6 +13,6 @@ let serverIP = '172.26.144.1' + ':3000';
 //   }
 // }
 
-//getServerIP();
+// getServerIP();
 
-export { serverIP };
+

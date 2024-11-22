@@ -9,16 +9,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // Para analisar conteúdo JSON no corpo da requisição
 app.use(express.static('public')); // Para servir arquivos estáticos
 
-// // Configuração da conexão com o banco de dados MySQL
-// const sequelize = new Sequelize('cards3d', 'Diego', '12354', {
-//   host: '127.0.0.1',
-//   port: 3306,
-//   dialect: 'mysql',
-//   dialectModule: require('mysql2'),
-//   logging: console.log
-// });
 
-// Configuração da conexão com o banco de dados MySQL
+//Configuração da conexão com o banco de dados MySQL PROD
 const sequelize = new Sequelize('freedb_DB_PROD', 'freedb_dlf123', 'qyqe2n$UFqfMjkc', {
   host: 'sql.freedb.tech',
   port: 3306,
@@ -27,14 +19,23 @@ const sequelize = new Sequelize('freedb_DB_PROD', 'freedb_dlf123', 'qyqe2n$UFqfM
   logging: console.log
 });
 
-async function testConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log('Conexão com o banco de dados foi estabelecida com sucesso!');
-  } catch (error) {
-    console.error('Não foi possível conectar ao banco de dados:', error);
-  }
-} testConnection();
+// // Configuração da conexão com o banco de dados MySQL HOM
+// const sequelize = new Sequelize('freedb_DB_PROD', 'root', '12354', {
+//   host: 'localhost',
+//   port: 3306,
+//   dialect: 'mysql',
+//   dialectModule: require('mysql2'),
+//   logging: console.log
+// });
+
+async function testConnection() { 
+  try { 
+    await sequelize.authenticate(); 
+    console.log('Conexão com o banco de dados foi estabelecida com sucesso!'); 
+  } catch (error) { 
+    console.error('Não foi possível conectar ao banco de dados:', error); 
+  } 
+} testConnection(); 
 module.exports = sequelize;
 
 // Definindo o modelo da tabela Cadastro_Empresas
@@ -60,6 +61,30 @@ const Empresa = sequelize.define('cadastro_empresas', {
   Ativo: {
     type: Sequelize.BOOLEAN
   }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
+
+// Definindo o modelo da tabela cadastro_pacientes
+const Paciente = sequelize.define('cadastro_pacientes', {
+  senha: {
+    type: Sequelize.STRING,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  nome: {
+    type: Sequelize.STRING,
+    defaultValue: Sequelize.NOW
+  },
+  hora_chegada: {
+    type: Sequelize.TIME
+  },
+  tempo_espera: {
+    type: Sequelize.TIME
+  },
+
 }, {
   timestamps: false,
   freezeTableName: true
@@ -93,65 +118,6 @@ const Log = sequelize.define('logs', {
   changed_by: {
     type: Sequelize.STRING
   }
-}, {
-  timestamps: false,
-  freezeTableName: true
-});
-
-// Adicionando hooks para logging 
-Empresa.addHook('beforeUpdate', async (empresa, options) => {
-  const originalEmpresa = await Empresa.findOne({
-    where: { Codigo: empresa.Codigo }
-  });
-  if (originalEmpresa) {
-    await Log.create({
-      action: 'UPDATE',
-      table_name: 'cadastro_empresas',
-      record_id: empresa.Codigo,
-      old_value: originalEmpresa.companyName,
-      new_value: empresa.companyName,
-      changed_by: 'Sistema'
-    });
-  }
-});
-Empresa.addHook('afterCreate', async (empresa, options) => {
-  await Log.create({
-    action: 'INSERT',
-    table_name: 'cadastro_empresas',
-    record_id: empresa.Codigo,
-    new_value: empresa.companyName,
-    changed_by: 'Sistema'
-  });
-});
-Empresa.addHook('afterDestroy', async (empresa, options) => {
-  await Log.create({
-    action: 'DELETE',
-    table_name: 'cadastro_empresas',
-    record_id: empresa.Codigo,
-    old_value: empresa.companyName,
-    changed_by: 'Sistema'
-  });
-});
-module.exports = { Empresa, Log };
-
-// Definindo o modelo da tabela cadastro_pacientes
-const Paciente = sequelize.define('cadastro_pacientes', {
-  senha: {
-    type: Sequelize.STRING,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  nome: {
-    type: Sequelize.STRING,
-    defaultValue: Sequelize.NOW
-  },
-  hora_chegada: {
-    type: Sequelize.TIME
-  },
-  tempo_espera: {
-    type: Sequelize.TIME
-  },
-
 }, {
   timestamps: false,
   freezeTableName: true
