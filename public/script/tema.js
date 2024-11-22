@@ -1,6 +1,6 @@
 const themeToggle = document.querySelector('.theme-toggle');
-const sunIcon = document.querySelector('.material-symbols-outlined.day');
-const moonIcon = document.querySelector('.material-symbols-outlined.night');
+const sunIcon = document.querySelector('.day-icon');
+const moonIcon = document.querySelector('.night-icon');
 
 // Função para definir o cookie
 function setCookie(name, value, days) {
