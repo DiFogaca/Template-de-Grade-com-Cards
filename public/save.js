@@ -1,13 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const app = express();
 const cors = require('cors'); // Adiciona esta linha
 
-app.use(cors()); // Adiciona esta linha
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // Para analisar conteúdo JSON no corpo da requisição
-app.use(express.static('public')); // Para servir arquivos estáticos
+app.use(express.static('public')); // Servir arquivos estáticos primeiro
+app.use(cors()); // Habilitar CORS para requisições
+app.use(bodyParser.urlencoded({ extended: true })); // Analisar URL-encoded
+app.use(bodyParser.json()); // Analisar JSON
+
 
 
 //Configuração da conexão com o banco de dados MySQL PROD
@@ -17,7 +19,7 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    port: 3306,
+    port: process.env.DB_PORT,
     dialect: 'mysql',
     dialectModule: require('mysql2'),
     logging: console.log
@@ -197,8 +199,9 @@ app.get('/logs/:record_id', async (req, res) => {
 
 
 
-// Inicializa o servidor na porta 3000
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000; // Porta a partir do .env ou 3000 por padrão
+
+app.listen(PORT, () => {
   const os = require('os');
   const interfaces = os.networkInterfaces();
   let address;
@@ -212,7 +215,8 @@ app.listen(3000, () => {
     }
   }
 
-  console.log(`Servidor iniciado na porta 3000: http://${address}:3000`);
+  console.log(`Servidor iniciado na porta ${PORT}: http://${address}:${PORT}`);
 });
+
 
 
